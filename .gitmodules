@@ -1,0 +1,3 @@
+[submodule "allocator-service"]
+	path = allocator-service
+	url = https://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@github.com/cscherhoff/allocator-service
