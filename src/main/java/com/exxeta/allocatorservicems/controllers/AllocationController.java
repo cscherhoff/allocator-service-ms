@@ -24,6 +24,7 @@ public class AllocationController {
 
     @GetMapping
     public String getAllocations() throws JsonProcessingException {
+        logger.info("Getting the allocations from database");
         return mapper.writeValueAsString(allocationService.getAllocations());
     }
 
