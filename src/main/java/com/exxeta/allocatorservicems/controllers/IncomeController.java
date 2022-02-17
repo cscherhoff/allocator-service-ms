@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 
 @RestController
-@RequestMapping(path = "/income")
+@RequestMapping(path = "/income/user/{userId}")
 public class IncomeController {
 
     private final Logger logger = LoggerFactory.getLogger(AllocationController.class);
@@ -22,12 +22,12 @@ public class IncomeController {
     }
 
     @GetMapping
-    public String getIncome() throws JsonProcessingException {
-        return mapper.writeValueAsString(incomeService.getIncome());
+    public String getIncome(@PathVariable long userId) throws JsonProcessingException {
+        return mapper.writeValueAsString(incomeService.getIncome(userId));
     }
 
     @PutMapping
-    public void updateIncome(@RequestBody BigDecimal income) {
-        incomeService.updateIncome(income);
+    public void updateIncome(@PathVariable long userId, @RequestBody BigDecimal income) {
+        incomeService.updateIncome(userId, income);
     }
 }
