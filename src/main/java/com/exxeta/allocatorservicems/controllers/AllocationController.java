@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/allocation")
+@RequestMapping(path = "/allocation/user/{userId}")
 public class AllocationController {
 
     private final Logger logger = LoggerFactory.getLogger(AllocationController.class);
@@ -23,13 +23,13 @@ public class AllocationController {
     }
 
     @GetMapping
-    public String getAllocations() throws JsonProcessingException {
+    public String getAllocations(@PathVariable long userId) throws JsonProcessingException {
         logger.info("Getting the allocations from database");
-        return mapper.writeValueAsString(allocationService.getAllocations());
+        return mapper.writeValueAsString(allocationService.getAllocations(userId));
     }
 
     @PutMapping
-    public void updateAllocations(@RequestBody List<Allocation> allocations) {
-        allocationService.updateAllocations(allocations);
+    public void updateAllocations(@PathVariable long userId, @RequestBody List<Allocation> allocations) {
+        allocationService.updateAllocations(userId, allocations);
     }
 }
