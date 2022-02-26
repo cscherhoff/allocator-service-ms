@@ -19,7 +19,7 @@ public class KafkaHandler {
     }
 
     /**
-     * publishes a Kafka message for every destination where the allocation has changed
+     * publishes a Kafka message for every destination where the value for the allocation has changed
      */
     public void publishAllocationUpdate(long userId, Allocation allocationFromRequest) {
         final Allocation allocationFromDb = allocationRepository.findById(userId).orElseGet(() -> new Allocation(userId));
