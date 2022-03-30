@@ -36,7 +36,7 @@ public class AllocationController {
     public void updateAllocation(@PathVariable long userId, @RequestBody Allocation allocation) {
         try {
             allocationService.updateAllocation(userId, allocation);
-            kafkaHandler.publishAllocationUpdate(userId, allocation);
+//            kafkaHandler.publishAllocationUpdate(userId, allocation);
         } catch (InvalidAllocationException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
