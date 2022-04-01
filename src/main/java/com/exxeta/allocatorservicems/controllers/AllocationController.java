@@ -34,6 +34,7 @@ public class AllocationController {
 
     @PutMapping
     public void updateAllocation(@PathVariable long userId, @RequestBody Allocation allocation) {
+//        allocationService.test123();
         try {
             allocationService.updateAllocation(userId, allocation);
 //            kafkaHandler.publishAllocationUpdate(userId, allocation);

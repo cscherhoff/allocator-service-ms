@@ -26,12 +26,12 @@ public class KafkaHandler {
         if (valueHasChanged(allocationFromRequest.getInvestment(), allocationFromDb.getInvestment())) {
             sendMessage(userId, "investment", allocationFromRequest.getInvestment());
         }
-        if (valueHasChanged(allocationFromRequest.getFixCosts(), allocationFromDb.getFixCosts())) {
-            sendMessage(userId, "fixCosts", allocationFromRequest.getFixCosts());
-        }
-        if (valueHasChanged(allocationFromRequest.getCategories(), allocationFromDb.getCategories())) {
-            sendMessage(userId, "categories", allocationFromRequest.getCategories());
-        }
+//        if (valueHasChanged(allocationFromRequest.getFixCosts(), allocationFromDb.getFixCosts())) {
+//            sendMessage(userId, "fixCosts", allocationFromRequest.getFixCosts());
+//        }
+//        if (valueHasChanged(allocationFromRequest.getCategories(), allocationFromDb.getCategories())) {
+//            sendMessage(userId, "categories", allocationFromRequest.getCategories());
+//        }
     }
 
     private void sendMessage(long userId, String topic, BigDecimal newValue) {
