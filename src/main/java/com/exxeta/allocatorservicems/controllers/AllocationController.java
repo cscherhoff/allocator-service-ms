@@ -1,6 +1,7 @@
 package com.exxeta.allocatorservicems.controllers;
 
 import com.exxeta.allocatorservice.entities.Allocation;
+import com.exxeta.allocatorservice.entities.Category;
 import com.exxeta.allocatorservice.services.AllocationService;
 import com.exxeta.allocatorservice.services.InvalidAllocationException;
 import com.exxeta.allocatorservicems.kafka.KafkaHandler;
@@ -11,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/allocation/user/{userId}")
@@ -35,9 +38,12 @@ public class AllocationController {
     @PutMapping
     public void updateAllocation(@PathVariable long userId, @RequestBody Allocation allocation) {
         try {
-            allocationService.updateAllocation(userId, allocation);
-//            kafkaHandler.publishAllocationUpdate(userId, allocation);
-        } catch (InvalidAllocationException e) {
+            allocation.setUserId(userId);
+            allocationService.validateAllocation(allocation);
+            List<Category> updatedCategories = allocationService.getUpdatedCategories(allocation);
+            allocationService.updateAllocation(userId, allocation); //TODO: check if userId is still needed
+            kafkaHandler.publishAllocationUpdate(userId, updatedCategories);
+        } catch (InvalidAllocationException | JsonProcessingException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
