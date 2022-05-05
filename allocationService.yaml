@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: allocation-service
+spec:
+  selector:
+    matchLabels:
+      app: allocation-service
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: allocation-service
+    spec:
+      containers:
+      - image: fragg90/allocator_service:1.0.0
+        name: allocation-service
+        env:
+        - name: spring.datasource.url
+          value: jdbc:mysql://allocation-db:3307/allocation_ms_test?characterEncoding=utf8&serverTimezone=CET&createDatabaseIfNotExist=true
+        - name: spring.datasource.username
+          value: root
+        - name: spring.datasource.password
+          value: root
+        - name: spring.kafka.bootstrap-servers
+          value: kafka:29092
+        - name: eureka.client.serviceUrl.defaultZone
+          value: http://eureka:8762/eureka
+        ports:
+        - containerPort: 8066
+          name: allo-service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: alloservice
+spec:
+  type: NodePort
+  ports:
+  - port: 3317
+    nodePort: 30007
+    targetPort: 8085
+  selector:
+    app: allocation-service

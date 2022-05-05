@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: allocation-db
+spec:
+  selector:
+    matchLabels:
+      app: allocation-db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: allocation-db
+    spec:
+      containers:
+      - image: mysql:5.6
+        name: allocation-db
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: root
+        - name: MYSQL_PASSWORD
+          value: Test12345
+        - name: MYSQL_DATABASE
+          value: allocation_ms_test
+        ports:
+        - containerPort: 3306
+          name: allocation-db
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: allocation-db
+spec:
+  type: NodePort
+  ports:
+  - port: 3307
+    nodePort: 30006
+    targetPort: 3306
+  selector:
+    app: allocation-db
