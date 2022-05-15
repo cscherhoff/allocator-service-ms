@@ -17,12 +17,6 @@ spec:
       - image: fragg90/allocator_service:1.0.0
         name: allocation-service
         env:
-        - name: spring.datasource.url
-          value: jdbc:mysql://allocation-db:3307/allocation_ms_test?characterEncoding=utf8&serverTimezone=CET&createDatabaseIfNotExist=true
-        - name: spring.datasource.username
-          value: root
-        - name: spring.datasource.password
-          value: root
         - name: spring.kafka.bootstrap-servers
           value: kafka:29092
         - name: eureka.client.serviceUrl.defaultZone
@@ -43,3 +37,13 @@ spec:
     targetPort: 8085
   selector:
     app: allocation-service
+---
+apiVersion: v1 
+kind: ConfigMap 
+metadata:
+  name: allocation-configmap 
+data:
+  # Configuration values can be set as key-value properties
+  spring.datasource.url: jdbc:mysql://allocation-db:3307/allocation_ms_test?characterEncoding=utf8&serverTimezone=CET&createDatabaseIfNotExist=true
+  spring.datasource.username: root
+  spring.datasource.password: root
