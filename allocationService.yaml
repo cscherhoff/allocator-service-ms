@@ -14,13 +14,28 @@ spec:
         app: allocation-service
     spec:
       containers:
-      - image: fragg90/allocator_service:1.0.0
+      - image: fragg90/allocator_service:1.1.0
         name: allocation-service
         env:
         - name: spring.kafka.bootstrap-servers
-          value: kafka:29092
+          value: kafkacont:29092
         - name: eureka.client.serviceUrl.defaultZone
           value: http://eureka:8762/eureka
+        - name: spring.datasource.url
+          valueFrom:
+            configMapKeyRef:
+              name: finance-manager-configmap
+              key: datasource.allocation
+        - name: spring.datasource.username
+          valueFrom:
+            configMapKeyRef:
+              name: finance-manager-configmap
+              key: db.user
+        - name: spring.datasource.password
+          valueFrom:
+            configMapKeyRef:
+              name: finance-manager-configmap
+              key: db.password
         ports:
         - containerPort: 8066
           name: allo-service
