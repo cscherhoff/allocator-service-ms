@@ -19,6 +19,8 @@ spec:
         env:
         - name: spring.kafka.bootstrap-servers
           value: kafkacont:29092
+        - name: eureka.instance.prefer-ip-address
+          value: "true"
         - name: eureka.client.serviceUrl.defaultZone
           value: http://eureka:8762/eureka
         - name: spring.datasource.url
