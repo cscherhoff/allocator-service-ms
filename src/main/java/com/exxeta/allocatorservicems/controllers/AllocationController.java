@@ -42,8 +42,8 @@ public class AllocationController {
             allocationService.validateAllocation(allocation);
             List<Category> updatedCategories = allocationService.getUpdatedCategories(allocation);
             allocationService.updateAllocation(userId, allocation); //TODO: check if userId is still needed
-            kafkaHandler.publishAllocationUpdate(userId, updatedCategories);
-        } catch (InvalidAllocationException | JsonProcessingException e) {
+//            kafkaHandler.publishAllocationUpdate(userId, updatedCategories);
+        } catch (InvalidAllocationException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
