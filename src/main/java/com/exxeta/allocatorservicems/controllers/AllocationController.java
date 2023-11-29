@@ -30,13 +30,13 @@ public class AllocationController {
     }
 
     @GetMapping
-    public String getAllocation(@PathVariable long userId) throws JsonProcessingException {
+    public String getAllocation(@PathVariable String userId) throws JsonProcessingException {
         logger.info("Getting the allocations from database");
         return mapper.writeValueAsString(allocationService.getAllocation(userId));
     }
 
     @PutMapping
-    public void updateAllocation(@PathVariable long userId, @RequestBody Allocation allocation) {
+    public void updateAllocation(@PathVariable String userId, @RequestBody Allocation allocation) {
         try {
             allocation.setUserId(userId);
             allocationService.validateAllocation(allocation);

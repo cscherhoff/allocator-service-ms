@@ -22,12 +22,12 @@ public class IncomeController {
     }
 
     @GetMapping
-    public String getIncome(@PathVariable long userId) throws JsonProcessingException {
+    public String getIncome(@PathVariable String userId) throws JsonProcessingException {
         return mapper.writeValueAsString(incomeService.getIncome(userId));
     }
 
     @PutMapping
-    public void updateIncome(@PathVariable long userId, @RequestBody BigDecimal income) {
+    public void updateIncome(@PathVariable String userId, @RequestBody BigDecimal income) {
         incomeService.updateIncome(userId, income);
     }
 }

@@ -23,7 +23,7 @@ public class KafkaHandler {
     /**
      * publishes a Kafka message for every destination where the value for the allocation has changed
      */
-    public void publishAllocationUpdate(long userId, List<Category> updatedCategories) throws JsonProcessingException {
+    public void publishAllocationUpdate(String userId, List<Category> updatedCategories) throws JsonProcessingException {
         kafkaTemplate.send("allocation", String.valueOf(userId), objectMapper.writeValueAsString(updatedCategories));
         logger.info("Sended kafka message: " + objectMapper.writeValueAsString(updatedCategories) + " with the key " + userId);
     }
