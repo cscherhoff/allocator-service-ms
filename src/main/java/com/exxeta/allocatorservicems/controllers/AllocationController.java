@@ -16,7 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/allocation/user/{userId}")
+@RequestMapping(path = "/allocation")
 public class AllocationController {
 
     private final Logger logger = LoggerFactory.getLogger(AllocationController.class);
@@ -30,13 +30,13 @@ public class AllocationController {
     }
 
     @GetMapping
-    public String getAllocation(@PathVariable String userId) throws JsonProcessingException {
+    public String getAllocation(@RequestParam String userId) throws JsonProcessingException {
         logger.info("Getting the allocations from database");
         return mapper.writeValueAsString(allocationService.getAllocation(userId));
     }
 
     @PutMapping
-    public void updateAllocation(@PathVariable String userId, @RequestBody Allocation allocation) {
+    public void updateAllocation(@RequestParam String userId, @RequestBody Allocation allocation) {
         try {
             allocation.setUserId(userId);
             allocationService.validateAllocation(allocation);
