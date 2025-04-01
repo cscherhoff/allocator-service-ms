@@ -14,7 +14,18 @@ RUN $JAVA_HOME/bin/jlink \
          --compress=2 \
          --output /customjre
 
-# Main app image
+# --- Build stage using Maven ---
+FROM maven:3.9.6-amazoncorretto-17-alpine AS build
+
+# Copy project files
+WORKDIR /build
+COPY pom.xml .
+COPY src ./src
+
+# Download dependencies and build the JAR
+RUN mvn clean package -DskipTests
+
+# --- Final stage with custom JRE ---
 FROM --platform=$TARGETPLATFORM alpine:latest
 
 # Set up Java environment
@@ -28,17 +39,16 @@ COPY --from=corretto-jdk /customjre $JAVA_HOME
 ARG APPLICATION_USER=appuser
 RUN adduser --no-create-home -u 1000 -D $APPLICATION_USER
 
-# Configure working directory
+# Set up app directory and permissions
 RUN mkdir /app && \
     chown -R $APPLICATION_USER /app
 
 USER 1000
-
-# Copy application JAR
-COPY --chown=1000:1000 target/allocator-service-ms-0.0.1-SNAPSHOT.jar /app/app.jar
 WORKDIR /app
 
-# Expose application port
+# Copy built JAR from build stage
+COPY --from=build /build/target/allocator-service-ms-0.0.1-SNAPSHOT.jar /app/app.jar
+
 EXPOSE 8085
 
 # Run the Java application
