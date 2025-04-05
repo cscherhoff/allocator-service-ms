@@ -1,46 +1,24 @@
-name: Build & Deploy on Raspberry Pi
+name: Deploy Microservice
 
 on:
+  workflow_dispatch:
   push:
     tags:
-      - 'v*'  # e.g., v3.0.6
+      - 'v*'
 
 jobs:
-  deploy:
-    name: Build and Deploy Allocation Service
-    runs-on: [self-hosted, linux, arm64]
-
-    env:
-      DOCKERHUB_ORG: ${{ secrets.DOCKERHUB_ORG }}
-      IMAGE_NAME: allocator_service
-      SERVICE_NAME: allocator-service
-      TAG: ${{ github.ref_name }}
+  trigger-deploy:
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          submodules: recursive  # optional if you use submodules
-
-      - name: Log in to Docker Hub
-        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-
-      - name: Build and push Docker image
+      - name: Send POST request to deploy server
         run: |
-          IMAGE="$DOCKERHUB_ORG/$IMAGE_NAME:$TAG"
-          
-          echo "Building Docker image: $IMAGE"
-          docker build -t $IMAGE .
+          echo "Triggering deployment..."
+          response=$(curl -s -w "\n%{http_code}" -X POST https://cscherhoff.duckdns.org:3949/deploy \
+            -u "${{ secrets.DEPLOY_USER }}:${{ secrets.DEPLOY_PASSWORD }}")
+          status=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | head -n-1)
 
-          echo "Pushing image to Docker Hub"
-          docker push $IMAGE
-
-          echo "Tagging as latest"
-          docker tag $IMAGE $DOCKERHUB_ORG/$IMAGE_NAME:latest
-          docker push $DOCKERHUB_ORG/$IMAGE_NAME:latest
-
-      - name: Update Docker Compose service
-        run: |
-          cd ~/microservices
-          docker-compose pull $SERVICE_NAME
-          docker-compose up -d $SERVICE_NAME
+          echo "Response status: $status"
+          echo "Response body:"
+          echo "$body"
