@@ -27,18 +27,18 @@ jobs:
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
-      - name: Build Docker image
-        run: |
-          IMAGE="${{ secrets.DOCKERHUB_ORG }}/$SERVICE_NAME"
-          VERSION="${{ steps.extract.outputs.version }}"
-          docker build -t $IMAGE:$VERSION -t $IMAGE:latest .
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: Push Docker image
-        run: |
-          IMAGE="${{ secrets.DOCKERHUB_ORG }}/$SERVICE_NAME"
-          VERSION="${{ steps.extract.outputs.version }}"
-          docker push $IMAGE:$VERSION
-          docker push $IMAGE:latest
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_ORG }}/allocator_service:latest
+            ${{ secrets.DOCKERHUB_ORG }}/allocator_service:${{ steps.extract.outputs.version }}
+          platforms: linux/arm64
 
       - name: Notify deploy server
         run: |
