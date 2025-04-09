@@ -1,5 +1,6 @@
 package com.exxeta.allocatorservicems.configuration;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -7,6 +8,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
+@ConditionalOnProperty(name = "debug.local", havingValue = "true")
 @EntityScan(basePackages = {"com.exxeta.allocatorservice"})
 @EnableJpaRepositories(basePackages = {"com.exxeta.allocatorservice"})
 public class SpringConfiguration implements WebMvcConfigurer {
