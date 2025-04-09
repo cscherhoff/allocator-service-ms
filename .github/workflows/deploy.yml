@@ -16,8 +16,9 @@ jobs:
       - name: Extract version from tag
         id: extract
         run: |
-          VERSION=${GITHUB_REF##*/}
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          RAW_VERSION=${GITHUB_REF##*/}
+          CLEAN_VERSION=${RAW_VERSION#v}
+          echo "version=$CLEAN_VERSION" >> $GITHUB_OUTPUT
 
       - name: Check out the code
         uses: actions/checkout@v4
